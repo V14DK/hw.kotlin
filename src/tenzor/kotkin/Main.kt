@@ -2,10 +2,11 @@ package tenzor.kotkin
 
 fun main() {
 
-    val card1 = Card("Clubs", 11)
-    val card2 = Card("Clubs", 12)
-    println(card1)
-    println(card2)
+    val card1 = Card("Clubs", 12)
+    val card2 = Card("Clubs", 11)
+    println(card1.compareTo(card2))
+    println(card1.hashCode())
+    println(card2.hashCode())
 
 
     val folder = Folder("first")

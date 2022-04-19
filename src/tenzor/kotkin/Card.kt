@@ -2,7 +2,6 @@ package tenzor.kotkin
 
 import java.util.Objects
 
-
 internal enum class Rank(val rank: Int) {
     Jack(11),
     Queen(12),
@@ -15,25 +14,30 @@ internal enum class Suit {
     Clubs,
     Diamonds,
     Hearts,
-    Spades
+    Spades;
+
+    companion object{
+        fun has(suit: String): Boolean {
+            for (value in values())
+                if (value.name == suit)
+                    return true
+            return false
+        }
+    }
 }
 
-class Card {
-    private lateinit var suit: String
-    private var rank: Int = 0
+data class Card(private val suit: String, private val rank: Int) {
 
-    internal constructor(suit: String, rank: Int) {
-        for (value in Suit.values())
-            if (suit == value.name)
-                this.suit = suit
-        if (this.suit.isEmpty())
-            return println("Wrong suit value")
-        this.rank = rank
+    init {
+        if (!Suit.has(suit))
+            throw Exception("Передана недопустимая масть")
+    if (rank < 2 || rank > 15)
+            throw Exception("Передан недопустимый ранг")
     }
 
-    private companion object {
-        public fun compareCards(firstCard: Card, secondCard: Card): Int {
-            return Integer.compare(Rank.valueOf(firstCard.suit).rank, Rank.valueOf(secondCard.suit).rank)
+    companion object {
+        fun compareCards(firstCard: Card, secondCard: Card): Int {
+            return Suit.valueOf(firstCard.suit).ordinal.compareTo(Suit.valueOf(secondCard.suit).ordinal)
         }
     }
 
@@ -46,28 +50,22 @@ class Card {
                     if (rank == "Joker")
                         return rank
                 }
-        return rank + " " + this.suit
+        return rank + " " + suit
     }
 
-    override fun hashCode(): Int {
-        return Objects.hash(this.suit, this.rank)
+    override fun hashCode(): Int = Objects.hash(rank, suit)
+
+    override fun equals(other: Any?): Boolean = hashCode() == other.hashCode()
+
+    fun isStandartDeck(): Boolean = rank in 6..14
+
+    fun isStronger(otherCard: Card): Boolean {
+        if (suit == otherCard.suit)
+            return rank > otherCard.rank
+        throw Exception("Карты разных мастей")
     }
 
-    public fun equals(otherCard: Card): Boolean {
-        return this.hashCode() == otherCard.hashCode()
-    }
-
-    public fun isStandartDeck(): Boolean {
-        return !(this.rank < 6) && !(this.rank > 14)
-    }
-
-    public fun isStronger(otherCard: Card): Boolean {
-        return this.rank > otherCard.rank
-    }
-
-    public fun compareTo(otherCard: Card): Int {
-        return Card.compareCards(this, otherCard)
-    }
+    fun compareTo(otherCard: Card): Int = compareCards(this, otherCard)
 
 }
 
