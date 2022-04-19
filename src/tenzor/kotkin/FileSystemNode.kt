@@ -1,9 +1,10 @@
 package tenzor.kotkin
 
 interface FileSystemNode {
-    public var name: String
 
-    public var parent: Folder?
+    var name: String
 
-    public var path: String?
+    var parent: Folder?
+
+    override fun toString(): String
 }

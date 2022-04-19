@@ -1,31 +1,11 @@
 package tenzor.kotkin
 
-class File: AbstractFileSystem {
-    override var name: String
-    override var parent: Folder? = null
-    override var path: String?
-    private var extention: String
+class File(override var parent: Folder?, override var name: String, var extention: String): AbstractFileSystem(parent, name) {
 
-    internal constructor(name: String, extention: String) {
-        this.name = name
-        this.extention = extention
-        this.path = "main/" + this.toString()
-    }
+    init { parent?.addChild(this) }
 
-    internal constructor(parent: Folder, name: String, extention: String): this(name, extention) {
-        this.parent = parent
-        parent.addChild(this)
-        this.name = name
-        this.extention = extention
-        this.path = (this.parent as Folder).path + '/' + this.toString()
-    }
+    internal constructor(name: String, extention: String): this(null,name, extention)
 
-    public fun setExtention(extention: String) { this.extention = extention}
-
-    public fun getExtention(): String {return this.extention }
-
-    override fun toString(): String {
-        return this.name + '.' + this.extention
-    }
+    override fun toString(): String { return (this.parent?.toString() ?: "main") + '/' + this.name + '.' + this.extention }
 
 }
